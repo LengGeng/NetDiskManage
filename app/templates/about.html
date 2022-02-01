@@ -1,0 +1,25 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    关于
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block header %}
+    {% include("components/nav.html") %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <p><strong>{{ title }}</strong>是一个网盘管理程序,旨在方便用户整合管理多个网盘中的资源进行管理。</p>
+        <p>目前已支持的网盘：</p>
+        <ul>
+            <li>百度网盘</li>
+        </ul>
+    </main>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

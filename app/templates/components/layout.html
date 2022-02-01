@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for("static",path="bootstrap-3.3.7-dist/css/bootstrap.min.css") }}">
+    <script src="{{ url_for("static",path="jquery-3.5.1/jquery.min.js") }}"></script>
+    <script src="{{ url_for("static",path="bootstrap-3.3.7-dist/js/bootstrap.min.js") }}"></script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+
+{% block header %}
+{% endblock %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+{% block script %}
+{% endblock %}
+
+</body>
+</html>

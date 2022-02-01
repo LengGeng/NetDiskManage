@@ -1,0 +1,56 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block head %}
+    <style>
+        .breadcrumb > .active a {
+            color: #777;
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+    {% include("components/nav.html") %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="jumbotron text-center">
+                    <p>{{ title }}</p>
+                    <p>{{ desc }}</p>
+                    <p><a class="btn btn-primary btn-lg" href="#" role="button">如何使用 -></a></p>
+                </div>
+
+                <ol class="breadcrumb"></ol>
+
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block script %}
+    <script>
+        let path = "{{ path }}";
+        let breadcrumb = document.body.querySelector("ol.breadcrumb");
+        breadcrumb.innerHTML += `<li><a href="/">根目录</a></li>`;
+
+        if (path) {
+            let paths = path.split("/");
+            let dirs = [];
+            for (const pathname of paths) {
+                dirs.push(pathname)
+                breadcrumb.innerHTML += ` <li><a href="/${dirs.join("/")}">${pathname}</a></li>`;
+            }
+        }
+        // 给面包屑最后一个添加class,并禁止点击
+        let breadcrumb_last = document.body.querySelector("ol.breadcrumb li:last-child");
+        breadcrumb_last.classList.add("active")
+        {#breadcrumb_last.innerHTML = breadcrumb_last.innerText#}
+        breadcrumb_last.style.pointerEvents = "none"
+    </script>
+{% endblock %}

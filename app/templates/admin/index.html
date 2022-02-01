@@ -1,0 +1,56 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    后台管理
+{% endblock %}
+
+{% block header %}
+    {% include "components/nav.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="present">
+        <h2>授权说明</h2>
+        <p>本程序使用需要获取百度网盘授权才能使用。</p>
+        <p>如果您是首次配置，请点击<a href="{{ authorize_url }}">获取授权</a>，登录百度账号以完成授权。（如已授权则覆盖原授权信息）</p>
+        <p>每次访问首页时，默认自动检测token有效期自动刷新，如果你的网站流量较少，请至少保证20天抓取一次首页。</p>
+        <p>在完成授权后，在下方会自动获取你的百度基础信息。</p>
+    </div>
+    <div class="users">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>百度账号</th>
+                <th>网盘昵称</th>
+                <th>用户ID</th>
+                <th>用户类型</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        let users = {{ users | safe }};
+        console.log(users)
+        let tbody = document.body.querySelector("table tbody");
+        users.forEach((user, i) => {
+            tbody.innerHTML += `
+        <tr>
+            <td>${i + 1}</td>
+            <td>
+                <img src="${user["avatar_url"]}" alt="..." class="img-circle" width="25">
+                ${user["baidu_name"]}
+            </td>
+            <td>${user["netdisk_name"]}</td>
+            <td>${user["uk"]}</td>
+            <td>${user["vip_type"]}</td>
+        </tr>
+        `;
+        })
+    </script>
+{% endblock %}
