@@ -3,7 +3,8 @@ import urllib.parse
 import requests
 from fastapi import APIRouter
 
-from settings import AppKey, SecretKey, redirect_uri, AUTHORIZE_STATE
+from config import CONFIG
+from settings import redirect_uri, AUTHORIZE_STATE
 
 baidu = APIRouter()
 
@@ -13,7 +14,7 @@ def get_authorize_url():
     url = "https://openapi.baidu.com/oauth/2.0/authorize?"
     params = {
         'response_type': 'code',
-        'client_id': AppKey,
+        'client_id': CONFIG.authorizers[0].AppKey,
         'redirect_uri': redirect_uri,
         'scope': 'basic,netdisk',
         'display': 'popup',
@@ -37,8 +38,8 @@ def get_token(code):
     params = {
         "grant_type": "authorization_code",
         "code": code,
-        "client_id": AppKey,
-        "client_secret": SecretKey,
+        "client_id": CONFIG.authorizers[0].AppKey,
+        "client_secret": CONFIG.authorizers[0].SecretKey,
         "redirect_uri": redirect_uri
     }
     response = requests.get(url, params=params)
@@ -52,8 +53,8 @@ def refresh_token(token: str):
     params = {
         "grant_type": "refresh_token",
         "refresh_token": token,
-        "client_id": AppKey,
-        "client_secret": SecretKey,
+        "client_id": CONFIG.authorizers[0].AppKey,
+        "client_secret": CONFIG.authorizers[0].SecretKey,
     }
     response = requests.get(url, params=params)
     return response.json()

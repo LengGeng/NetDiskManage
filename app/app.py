@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from starlette.templating import Jinja2Templates
 
 from api.baidu import get_authorize_url, get_user_info
+from config import CONFIG
 
 application = APIRouter()
 
@@ -18,9 +19,7 @@ def about(request: Request):
 @application.get("/admin")
 def admin(request: Request):
     authorize_url = get_authorize_url()
-    access_token = "121.3b5b5714002e498009d24ad64e38d5ab.YgoiplwVRVchAH29jO2A6_I7ggFBxQP7lddx4w-.U42RMA"
-    user = get_user_info(access_token)
-    users = [user]
+    users = [get_user_info(account.access_token) for account in CONFIG.accounts]
     return templates.TemplateResponse("admin/index.html", {
         "request": request,
         "authorize_url": authorize_url,
@@ -33,7 +32,7 @@ def admin(request: Request):
 def index(request: Request, filepath: Optional[str] = None):
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "title": "NetDiskManage",
-        "desc": "网盘管理程序",
+        "title": CONFIG.site.title,
+        "desc": CONFIG.site.desc,
         "path": filepath
     })
