@@ -24,14 +24,6 @@ def get_authorize_url():
     return url + query_string
 
 
-# 2.2 接受授权参数
-@baidu.get("/authorize")
-def authorize(code: str, state: int):
-    if state != AUTHORIZE_STATE:
-        return {"error": "invalid state."}
-    return get_token(code)
-
-
 # 2.3 用CODE换取Access_token
 def get_token(code):
     url = "https://openapi.baidu.com/oauth/2.0/token"

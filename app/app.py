@@ -3,12 +3,21 @@ from typing import Optional
 from fastapi import APIRouter, Request
 from starlette.templating import Jinja2Templates
 
-from api.baidu import get_authorize_url, get_user_info
+from api.baidu import get_authorize_url, get_user_info, get_token
 from config import CONFIG
+from settings import AUTHORIZE_STATE
 
 application = APIRouter()
 
 templates = Jinja2Templates(directory="./app/templates")
+
+
+# 2.2 接受授权参数
+@application.get("/authorize")
+def authorize(code: str, state: int):
+    if state != AUTHORIZE_STATE:
+        return {"error": "invalid state."}
+    return get_token(code)
 
 
 @application.get("/about")
