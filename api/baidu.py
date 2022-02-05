@@ -4,13 +4,13 @@ import requests
 from fastapi import APIRouter
 
 from config import CONFIG
-from settings import redirect_uri, AUTHORIZE_STATE
+from settings import redirect_uri
 
 baidu = APIRouter()
 
 
 # 2.1 拼接授权链接
-def get_authorize_url():
+def get_authorize_url(state: int):
     url = "https://openapi.baidu.com/oauth/2.0/authorize?"
     params = {
         'response_type': 'code',
@@ -18,7 +18,7 @@ def get_authorize_url():
         'redirect_uri': redirect_uri,
         'scope': 'basic,netdisk',
         'display': 'popup',
-        'state': AUTHORIZE_STATE
+        'state': state
     }
     query_string = urllib.parse.urlencode(params)
     return url + query_string

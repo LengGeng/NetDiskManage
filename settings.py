@@ -1,3 +1,3 @@
 redirect_uri = "http://127.0.0.1:8000/authorize"
-AUTHORIZE_STATE = 55
+SECRET_KEY = "create_SECRET_KEY.py"
 CONFIG_PATH = "config.json"

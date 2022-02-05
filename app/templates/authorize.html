@@ -1,0 +1,102 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    授权信息
+{% endblock %}
+
+{% block head %}
+    <style>
+        td {
+            padding: 5px;
+            border: 1px solid #ddd;
+            word-break: break-all;
+        }
+
+        pre > code {
+            padding: 5px;
+            white-space: normal;
+            word-break: break-all;
+        }
+    </style>
+
+    <script src="{{ url_for("static",path="clipboard.min.js") }}"></script>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">本次授权结果如下：</h2>
+    <table class="table table-bordered table-responsive">
+        <tr>
+            <th>名称</th>
+            <th>描述</th>
+            <th>值</th>
+        </tr>
+        <tr>
+            <td>expires_in</td>
+            <td>有效时间</td>
+            <td>{{ info.expires_in }}</td>
+        </tr>
+        <tr>
+            <td>refresh_token</td>
+            <td>刷新token</td>
+            <td>{{ info.get("refresh_token") }}</td>
+        </tr>
+        <tr>
+            <td>access_token</td>
+            <td>访问令牌</td>
+            <td>{{ info.get("access_token") }}</td>
+        </tr>
+        <tr>
+            <td>session_secret</td>
+            <td>session_secret</td>
+            <td>{{ info.get("session_secret") }}</td>
+        </tr>
+        <tr>
+            <td>session_key</td>
+            <td>session_key</td>
+            <td>{{ info.get("session_key") }}</td>
+        </tr>
+        <tr>
+            <td>scope</td>
+            <td>权限</td>
+            <td>{{ info.get("scope") }}</td>
+        </tr>
+        <tr>
+            <td>redirect_uri</td>
+            <td>授权地址</td>
+            <td>{{ info.get("redirect_uri") }}</td>
+        </tr>
+    </table>
+    <h2>授权信息
+        <button id="copy" class="btn btn-lg btn-primary">复制</button>
+    </h2>
+    <div>
+        <pre><code id="code">{{ info | safe }}</code></pre>
+    </div>
+    <h2><a href="./">返回</a></h2>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // 返回指定的text
+        var clipboard = new ClipboardJS('#copy', {
+            text: function () {
+                return $("#code").text();
+            }
+        });
+        // 复制成功事件
+        clipboard.on('success', function (e) {
+            alert("复制成功")
+        });
+        // 复制失败事件
+        clipboard.on('error', function (e) {
+            alert("复制失败")
+        });
+        $(function () {
+            if ($(window).height() == $(document).height()) {
+                $(".copyright").addClass("navbar-fixed-bottom");
+            } else {
+                $(".copyright").removeClass(" navbar-fixed-bottom");
+            }
+        });
+    </script>
+{% endblock %}

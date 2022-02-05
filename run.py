@@ -2,11 +2,13 @@ import time
 
 import uvicorn
 from fastapi import FastAPI, Request
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import baidu
 from app.app import application
+from settings import SECRET_KEY
 
 app = FastAPI(
     title="NetDiskManage",
@@ -15,7 +17,6 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redocs"
 )
-
 
 # mount表示将某个目录下一个完全独立的应用挂载过来，这个不会在API交互文档中显示
 app.mount("/static", app=StaticFiles(directory="./static"), name="static")
@@ -40,6 +41,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+# 开启 Session
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 app.include_router(baidu, prefix="/api/baidu", tags=["百度网盘"])
 app.include_router(application, tags=["主程序"])

@@ -60,8 +60,8 @@ def refresh_config():
 
 
 try:
-    CONFIG = Config.parse_file(CONFIG_PATH)
+    CONFIG: Config = Config.parse_file(CONFIG_PATH)
 except FileNotFoundError:
     print("create default config.")
-    CONFIG = Config.parse_raw(default_config)
+    CONFIG: Config = Config.parse_raw(default_config)
     refresh_config()
