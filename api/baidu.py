@@ -6,8 +6,12 @@ from config import CONFIG
 from settings import redirect_uri
 
 
-# 2.1 拼接授权链接
-def get_authorize_url(state: int):
+def get_authorize_url(state: int) -> str:
+    """
+    2.1 拼接授权链接
+    :param state: 授权重定向后会带上state参数。可以利用state参数来防止CSRF攻击
+    :return:
+    """
     url = "https://openapi.baidu.com/oauth/2.0/authorize?"
     params = {
         'response_type': 'code',
@@ -21,8 +25,12 @@ def get_authorize_url(state: int):
     return url + query_string
 
 
-# 2.3 用CODE换取Access_token
-def get_token(code):
+def get_token(code: str) -> dict:
+    """
+    2.3 用CODE换取Access_token
+    :param code: 获取用户授权后得到的code
+    :return:
+    """
     url = "https://openapi.baidu.com/oauth/2.0/token"
     params = {
         "grant_type": "authorization_code",
@@ -32,12 +40,15 @@ def get_token(code):
         "redirect_uri": redirect_uri
     }
     response = requests.get(url, params=params)
-    print(response.json())
     return {**response.json(), "redirect_uri": redirect_uri}
 
 
-# 2.4 刷新Access_token
-def refresh_token(token: str):
+def refresh_token(token: str) -> dict:
+    """
+    # 2.4 刷新Access_token
+    :param token: 用于刷新的refresh_token
+    :return:
+    """
     url = "https://openapi.baidu.com/oauth/2.0/token"
     params = {
         "grant_type": "refresh_token",
