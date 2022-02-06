@@ -1,12 +1,9 @@
 import urllib.parse
 
 import requests
-from fastapi import APIRouter
 
 from config import CONFIG
 from settings import redirect_uri
-
-baidu = APIRouter()
 
 
 # 2.1 拼接授权链接
