@@ -60,19 +60,40 @@ def refresh_token(token: str) -> dict:
     return response.json()
 
 
-# 获取用户信息
-def get_user_info(access_token: str):
+def get_user_info(access_token: str) -> dict:
+    """
+    # 获取用户信息
+    :param access_token: access_token
+    :return:
+    """
     url = "https://pan.baidu.com/rest/2.0/xpan/nas"
     params = {
         "method": "uinfo",
         "access_token": access_token,
     }
-    payload = {}
     headers = {
         'User-Agent': 'pan.baidu.com'
     }
+    response = requests.get(url, params=params, headers=headers)
+    return response.json()
 
-    response = requests.request("GET", url, params=params, headers=headers, data=payload)
-    # response = requests.get(url, params=params, headers=headers)
 
+def get_netdisk_info(access_token: str, checkfree: int = 0, checkexpire: int = 0) -> dict:
+    """
+    获取网盘容量信息
+    :param access_token: access_token
+    :param checkfree: 是否检查免费信息，0为不查，1为查
+    :param checkexpire: 是否检查过期信息，0为不查，1为查
+    :return:
+    """
+    url = "https://pan.baidu.com/api/quota"
+    params = {
+        "access_token": access_token,
+        "checkfree": checkfree,
+        "checkexpire": checkexpire,
+    }
+    headers = {
+        'User-Agent': 'pan.baidu.com'
+    }
+    response = requests.get(url, params=params, headers=headers)
     return response.json()
