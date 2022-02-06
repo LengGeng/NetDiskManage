@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel
 
@@ -17,11 +17,24 @@ class Authorizer(BaseModel):
     SignKey: str
 
 
-class Account(BaseModel):
+class AccountInfo(BaseModel):
+    uk: int  # 用户ID
+    baidu_name: str  # 百度账号
+    netdisk_name: str  # 网盘账号
+    avatar_url: str  # 头像地址
+    vip_type: int  # 会员类型，0普通用户、1普通会员、2超级会员
+
+
+class AccountToken(BaseModel):
     scope: str
     expires_in: int
     access_token: str
     refresh_token: str
+
+
+class Account(BaseModel):
+    info: AccountInfo
+    token: AccountToken
 
 
 class WebSite(BaseModel):
@@ -34,7 +47,7 @@ class Config(BaseModel):
     user: User
     site: WebSite
     authorizers: List[Authorizer] = []
-    accounts: List[Account] = []
+    accounts: Dict[str, Account] = {}
 
 
 default_config = """
@@ -47,9 +60,7 @@ default_config = """
     "title": "NetDiskManage",
     "subtitle": "网盘管理",
     "desc": "NetDiskManage是一个网盘管理程序,旨在方便用户整合管理多个网盘中的资源进行管理。"
-  },
-  "authorizers": [],
-  "accounts": []
+  }
 }
 """
 

@@ -24,6 +24,10 @@
 
 {% block content %}
     <h2 class="text-center">本次授权结果如下：</h2>
+    <h2>授权信息
+        <button id="copy" class="btn btn-lg btn-primary">复制</button>
+    </h2>
+    <pre><code id="code">{{ token | safe }}</code></pre>
     <table class="table table-bordered table-responsive">
         <tr>
             <th>名称</th>
@@ -33,52 +37,66 @@
         <tr>
             <td>expires_in</td>
             <td>有效时间</td>
-            <td>{{ info.expires_in }}</td>
+            <td>{{ token.get("expires_in") }}</td>
         </tr>
         <tr>
             <td>refresh_token</td>
             <td>刷新token</td>
-            <td>{{ info.get("refresh_token") }}</td>
+            <td>{{ token.get("refresh_token") }}</td>
         </tr>
         <tr>
             <td>access_token</td>
             <td>访问令牌</td>
-            <td>{{ info.get("access_token") }}</td>
+            <td>{{ token.get("access_token") }}</td>
         </tr>
         <tr>
             <td>session_secret</td>
             <td>session_secret</td>
-            <td>{{ info.get("session_secret") }}</td>
+            <td>{{ token.get("session_secret") }}</td>
         </tr>
         <tr>
             <td>session_key</td>
             <td>session_key</td>
-            <td>{{ info.get("session_key") }}</td>
+            <td>{{ token.get("session_key") }}</td>
         </tr>
         <tr>
             <td>scope</td>
             <td>权限</td>
-            <td>{{ info.get("scope") }}</td>
+            <td>{{ token.get("scope") }}</td>
         </tr>
         <tr>
             <td>redirect_uri</td>
             <td>授权地址</td>
-            <td>{{ info.get("redirect_uri") }}</td>
+            <td>{{ token.get("redirect_uri") }}</td>
         </tr>
     </table>
-    <h2>授权信息
-        <button id="copy" class="btn btn-lg btn-primary">复制</button>
-    </h2>
-    <div>
-        <pre><code id="code">{{ info | safe }}</code></pre>
-    </div>
+
+    <h2>账户信息</h2>
+    <table class="table table-bordered table-responsive">
+        <tr>
+            <th>百度账号</th>
+            <th>网盘昵称</th>
+            <th>用户ID</th>
+            <th>用户类型</th>
+        </tr>
+        <tr>
+            <td>
+                <img src="{{ info.get("avatar_url") }}" alt="..." class="img-circle" width="25">
+                {{ info.get("baidu_name") }}
+            </td>
+            <td>{{ info.get("netdisk_name") }}</td>
+            <td>{{ info.get("uk") }}</td>
+            <td>{{ info.get("vip_type") }}</td>
+        </tr>
+    </table>
+
     <h2><a href="./">返回</a></h2>
 {% endblock %}
 
 {% block script %}
     <script>
         // 返回指定的text
-        var clipboard = new ClipboardJS('#copy', {
+        let clipboard = new ClipboardJS('#copy', {
             text: function () {
                 return $("#code").text();
             }
@@ -90,13 +108,6 @@
         // 复制失败事件
         clipboard.on('error', function (e) {
             alert("复制失败")
-        });
-        $(function () {
-            if ($(window).height() == $(document).height()) {
-                $(".copyright").addClass("navbar-fixed-bottom");
-            } else {
-                $(".copyright").removeClass(" navbar-fixed-bottom");
-            }
         });
     </script>
 {% endblock %}

@@ -1,4 +1,5 @@
 import random
+import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Request
@@ -15,14 +16,22 @@ templates = Jinja2Templates(directory="./app/templates")
 # 2.2 接受授权参数
 @application.get("/authorize")
 def authorize(request: Request, code: str, state: int):
+    # 判断 state，可以防止CSRF攻击
     if state != request.session.get("state"):
         return {"error": "invalid state."}
-    token = get_token(code)
-    CONFIG.accounts.append(Account(**token))
+    # 获取 token
+    account_token = get_token(code)
+    # 获取账户信息
+    account_info = get_user_info(account_token.get("access_token"))
+    # 存储账户信息
+    account = Account(info=account_info, token=account_token)
+    account_id = uuid.uuid5(uuid.NAMESPACE_DNS, str(account.info.uk))
+    CONFIG.accounts[str(account_id)] = account
     refresh_config()
     return templates.TemplateResponse("authorize.html", {
         "request": request,
-        "info": token
+        "info": account_info,
+        "token": account_token,
     }
                                       )
 
@@ -37,7 +46,7 @@ def admin(request: Request):
     state = random.randint(1, 100)
     request.session["state"] = state
     authorize_url = get_authorize_url(state)
-    users = [get_user_info(account.access_token) for account in CONFIG.accounts]
+    users = [account_token.info.dict() for account_token in CONFIG.accounts.values()]
     return templates.TemplateResponse("admin/index.html", {
         "request": request,
         "authorize_url": authorize_url,
