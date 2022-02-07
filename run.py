@@ -6,7 +6,6 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import baidu
 from app.app import application
 from settings import SECRET_KEY
 
@@ -44,7 +43,7 @@ app.add_middleware(
 # 开启 Session
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
-app.include_router(baidu, prefix="/api/baidu", tags=["百度网盘"])
+# app.include_router(baidu, prefix="/api/baidu", tags=["百度网盘"])
 app.include_router(application, tags=["主程序"])
 
 if __name__ == '__main__':
