@@ -1,0 +1,193 @@
+<style>
+    a:hover {
+        text-decoration: none;
+    }
+
+    .cursor-p {
+        cursor: pointer;
+    }
+
+    .pointer-events-all {
+        pointer-events: all;
+    }
+
+    .file-list {
+        width: 100%;
+    }
+
+    .file-list p {
+        margin: 0;
+    }
+
+    .file-list tr {
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid #f9f9f9;
+        color: #03081a;
+        font-size: 12px;
+    }
+
+    .file-list tr td {
+        line-height: 1px;
+    }
+
+    .file-list > thead > tr {
+        text-align: left;
+    }
+
+    .is-select {
+        padding-left: 18px;
+        line-height: 1px;
+    }
+
+    .title {
+        color: #03081a;
+    }
+
+    .title:hover {
+        color: #06a7ff;
+    }
+
+
+    .file-list-name-icon {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        vertical-align: middle;
+        background-image: url({{ url_for("static",path="images/folder.png") }});
+        background-size: 60%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .type-dir {
+        background-image: url({{ url_for("static",path="images/folder.png") }});
+    }
+
+    .type-file {
+        background-image: url({{ url_for("static",path="images/file.png") }});
+    }
+
+    .title {
+        padding-left: 5px;
+        line-height: 40px;
+        display: inline-block;
+    }
+
+
+</style>
+<table class="file-list">
+    <colgroup>
+        <col width="6%">
+        <col width="47%">
+        <col width="22%">
+        <col width="23%">
+    </colgroup>
+    <thead>
+    <tr class="file-list-head">
+        <th></th>
+        <th>文件名</th>
+        <th>时间</th>
+        <th>大小</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="file-list-item">
+        <!-- 选中 -->
+        <td class="text-center is-select">
+            <label role="checkbox" class="u-checkbox">
+                <input type="checkbox" aria-hidden="true" class="u-checkbox__original" value="">
+            </label>
+        </td>
+        <!-- 文件名 -->
+        <td>
+            <div class="file-list-name-column">
+                <div class="pointer-events-all cursor-p" draggable="true">
+                    <!-- <img class="file-list-name-icon" src="" alt="icon"> -->
+                    <span class="file-list-name-icon type-file"></span>
+                    <a title="Game" class="title">Game</a>
+                </div>
+            </div>
+        </td>
+        <!-- 时间 -->
+        <td class="text-muted">
+            <div class="file-list-time-column">
+                <p>2022-01-24 13:34</p>
+            </div>
+        </td>
+        <!-- 大小 -->
+        <td class="text-muted">
+            <div class="file-list-size-column">
+                <p>-</p>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    function filesizeFormat(size, pro = 0.9, dec = 2) {
+        let units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        let pos = 0
+        while (size >= 1024 * pro) {
+            size /= 1024;
+            pos += 1;
+            if (pos >= units.length) break
+        }
+        return size.toFixed(dec) + units[pos]
+    }
+
+    // author: meizz
+    Date.prototype.Format = function (fmt) {
+        let o = {
+            "M+": this.getMonth() + 1, // 月份
+            "d+": this.getDate(), // 日
+            "h+": this.getHours(), // 小时
+            "m+": this.getMinutes(), // 分
+            "s+": this.getSeconds(), // 秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+            "S": this.getMilliseconds() // 毫秒
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (let k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+    let fileListData = {{ file_list | safe }};
+    let fileList = fileListData.list;
+    let file_list_tbody = document.body.querySelector("tbody");
+    file_list_tbody.innerHTML = "";
+
+    fileList.forEach(file_info => {
+        file_list_tbody.innerHTML += `
+    <tr class="file-list-item">
+        <td class="text-center is-select">
+            <label role="checkbox" class="u-checkbox">
+                <input type="checkbox" aria-hidden="true" class="u-checkbox__original" value="">
+            </label>
+        </td>
+        <td>
+            <div class="file-list-name-column">
+                <div class="pointer-events-all cursor-p" draggable="true">
+                    <span class="file-list-name-icon ${file_info.isdir ? "type-dir" : "type-file"}"></span>
+                    <a href="${file_info.path}" title="Game" class="title" ${file_info.isdir ? "" : 'style="pointer-events: none;"'}>${file_info.server_filename}</a>
+                </div>
+            </div>
+        </td>
+        <td class="text-muted">
+            <div class="file-list-time-column">
+                <p>${new Date(file_info.server_mtime * 1000).Format("yyyy-MM-dd")}</p>
+            </div>
+        </td>
+        <td class="text-muted">
+            <div class="file-list-size-column">
+                <p>${file_info.isdir ? "-" : filesizeFormat(file_info.size)}</p>
+            </div>
+        </td>
+    </tr>`;
+    })
+
+    let file_list = document.body.querySelector(".file-list")
+
+</script>

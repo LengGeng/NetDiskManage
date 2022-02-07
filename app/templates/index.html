@@ -28,6 +28,7 @@
 
                 <ol class="breadcrumb"></ol>
 
+                {% include "components/fileList.html" %}
             </div>
         </div>
     </main>
@@ -40,7 +41,7 @@
         breadcrumb.innerHTML += `<li><a href="/">根目录</a></li>`;
 
         if (path) {
-            let paths = path.split("/");
+            let paths = path.slice(1, path.length).split("/");
             let dirs = [];
             for (const pathname of paths) {
                 dirs.push(pathname)

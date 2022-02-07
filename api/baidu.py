@@ -97,3 +97,64 @@ def get_netdisk_info(access_token: str, checkfree: int = 0, checkexpire: int = 0
     }
     response = requests.get(url, params=params, headers=headers)
     return response.json()
+
+
+def get_file_list(access_token: str, path: str = "/", start: int = 0, limit: int = 50,
+                  order: str = "name", desc: bool = False) -> dict:
+    """
+    获取文件列表
+    :param access_token: access_token
+    :param path: 路径
+    :param start: 起始位置，从0开始
+    :param limit: 每页条目数，默认为50，最大值为10000
+    :param order: 先按文件类型排序后的排序字段，time修改时间 name文件名称 size文件大小
+    :param desc: 降序排列
+    :return:
+    """
+    url = "https://pan.baidu.com/rest/2.0/xpan/file"
+    params = {
+        "method": "list",
+        "access_token": access_token,
+        "dir": path,
+        "start": start,
+        "limit": limit,
+        "order": order,
+    }
+    if desc:
+        params["desc"] = "1"
+    headers = {
+        'User-Agent': 'pan.baidu.com'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    return response.json()
+
+
+def get_file_list_walk(access_token: str, path: str = "/", start: int = 0, limit: int = 50,
+                       order: str = "name", desc: bool = False) -> dict:
+    """
+    递归获取文件列表
+    :param access_token: access_token
+    :param path: 路径
+    :param start: 起始位置，从0开始
+    :param limit: 每页条目数，默认为50，最大值为10000
+    :param order: 先按文件类型排序后的排序字段，time修改时间 name文件名称 size文件大小
+    :param desc: 降序排列
+    :return:
+    """
+    url = "https://pan.baidu.com/rest/2.0/xpan/multimedia"
+    params = {
+        "method": "listall",
+        "access_token": access_token,
+        "path": path,
+        "start": start,
+        "limit": limit,
+        "order": order,
+        "recursion": 1,
+    }
+    if desc:
+        params["desc"] = "1"
+    headers = {
+        'User-Agent': 'pan.baidu.com'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    return response.json()

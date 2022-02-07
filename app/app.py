@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Request
 from starlette.templating import Jinja2Templates
 
-from api.baidu import get_authorize_url, get_user_info, get_token
+from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list
 from config import CONFIG, refresh_config, Account
 
 application = APIRouter()
@@ -57,9 +57,13 @@ def admin(request: Request):
 # 放在左后
 @application.get("/{filepath:path}")
 def index(request: Request, filepath: Optional[str] = None):
+    filepath = "/" + filepath
+    access_token = [account.token.access_token for account in CONFIG.accounts.values()][0]
+    file_list = get_file_list(access_token, path=filepath)
     return templates.TemplateResponse("index.html", {
         "request": request,
         "title": CONFIG.site.title,
         "desc": CONFIG.site.desc,
-        "path": filepath
+        "path": filepath,
+        "file_list": file_list
     })
