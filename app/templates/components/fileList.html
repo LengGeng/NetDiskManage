@@ -74,6 +74,17 @@
         display: inline-block;
     }
 
+    .file-list-time-column > .btn-group {
+        display: none;
+    }
+
+    tr:hover .file-list-time-column > p {
+        display: none;
+    }
+
+    tr:hover .file-list-time-column > .btn-group {
+        display: block;
+    }
 
 </style>
 <table class="file-list">
@@ -113,6 +124,10 @@
         <td class="text-muted">
             <div class="file-list-time-column">
                 <p>2022-01-24 13:34</p>
+                <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">Left</button>
+                    <button type="button" class="btn btn-default">Right</button>
+                </div>
             </div>
         </td>
         <!-- 大小 -->
@@ -178,6 +193,15 @@
         <td class="text-muted">
             <div class="file-list-time-column">
                 <p>${new Date(file_info.server_mtime * 1000).Format("yyyy-MM-dd")}</p>
+                <div class="btn-group btn-group-cm" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">
+                        <a
+                            href="${file_info.isdir ? "javascript:alert('文件夹暂不支持下载!')" : "/down?fid=" + file_info.fs_id}"
+                            target="${file_info.isdir ? "_self" : "_blank"}">下载
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-default">更多</button>
+                </div>
             </div>
         </td>
         <td class="text-muted">

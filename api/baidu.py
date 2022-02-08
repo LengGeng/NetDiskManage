@@ -1,4 +1,5 @@
 import urllib.parse
+from typing import List
 
 import requests
 
@@ -153,6 +154,35 @@ def get_file_list_walk(access_token: str, path: str = "/", start: int = 0, limit
     }
     if desc:
         params["desc"] = "1"
+    headers = {
+        'User-Agent': 'pan.baidu.com'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    return response.json()
+
+
+def get_filemetas(access_token: str, fsids: List[int], *,
+                  dlink: int = 1, thumb: int = 0, extra: int = 0, needmedia: int = 0) -> dict:
+    """
+    查询文件信息
+    :param access_token: access_token
+    :param fsids: 文件id数组,上限100个
+    :param dlink: 是否需要下载地址，0为否，1为是，默认为1
+    :param thumb: 是否需要缩略图地址，0为否，1为是，默认为0
+    :param extra: 图片是否需要拍摄时间、原图分辨率等其他信息，0 否、1 是，默认0
+    :param needmedia: 视频是否需要展示时长信息，0 否、1 是，默认0
+    :return:
+    """
+    url = "https://pan.baidu.com/rest/2.0/xpan/multimedia"
+    params = {
+        "method": "filemetas",
+        "access_token": access_token,
+        "fsids": str(fsids),
+        "dlink": dlink,
+        "thumb": thumb,
+        "extra": extra,
+        "needmedia": needmedia
+    }
     headers = {
         'User-Agent': 'pan.baidu.com'
     }

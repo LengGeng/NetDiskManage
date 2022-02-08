@@ -2,10 +2,12 @@ import random
 import uuid
 from typing import Optional
 
+import requests
 from fastapi import APIRouter, Request
+from starlette.responses import StreamingResponse
 from starlette.templating import Jinja2Templates
 
-from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list
+from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
 from config import CONFIG, refresh_config, Account
 
 application = APIRouter()
@@ -34,6 +36,37 @@ def authorize(request: Request, code: str, state: int):
         "token": account_token,
     }
                                       )
+
+
+@application.get("/down")
+def down(fid: int):
+    access_token = [account.token.access_token for account in CONFIG.accounts.values()][0]
+    filemetas = get_filemetas(access_token, [fid])
+    file_meta = filemetas.get("list")[0]
+    link = file_meta.get("dlink")
+    filename = file_meta.get("filename")
+    filesize = file_meta.get("size")
+
+    def send_chunk():
+        url = f"{link}&access_token={access_token}"
+        headers = {
+            'User-Agent': 'pan.baidu.com'
+        }
+        # 流式读取
+        with requests.get(url, headers=headers, stream=True) as file:
+            file.raise_for_status()
+            yield from file.iter_content(chunk_size=8192)
+
+    response_headers = {
+        "Content-type": "application/octet-stream",
+        "Accept-Ranges": "bytes",
+        "Content-Disposition": f"attachment; filename={filename}",
+        "Content-Length": f"{filesize}",
+        "Content-Transfer-Encoding": "binary"
+    }
+    # 流式读取
+    response = StreamingResponse(send_chunk(), headers=response_headers)
+    return response
 
 
 @application.get("/about")
