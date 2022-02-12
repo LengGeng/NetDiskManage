@@ -3,8 +3,8 @@ import uuid
 from typing import Optional
 
 import requests
-from fastapi import APIRouter, Request
-from starlette.responses import StreamingResponse
+from fastapi import APIRouter, Request, Form
+from starlette.responses import StreamingResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
@@ -89,6 +89,34 @@ def down_link(request: Request, fid: int):
 @application.get("/about")
 def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
+
+
+@application.api_route("/login", methods=["GET", "POST"])
+def login(request: Request, username: str = Form(""), password: str = Form("")):
+    success_redirect_response = RedirectResponse(application.url_path_for("admin"))
+    # https://stackoverflow.com/questions/66849929/fastapi-redirect-gives-method-not-allowed-error
+    # 解决 POST 跳转到 /admin 返回 Method Not Allowed
+    success_redirect_response.status_code = 302
+    msg = ""
+    # 判断是否登录
+    if request.session.get("login"):
+        return success_redirect_response
+    # 判断请求方式
+    if request.method == "POST":
+        if username and password:
+            if username == CONFIG.user.username and password == CONFIG.user.password:
+                print("登陆成功!")
+                request.session.setdefault("login", True)
+                return success_redirect_response
+            else:
+                msg = "用户名或密码错误!!!"
+        else:
+            msg = "用户名或密码不能为空!!!"
+
+    return templates.TemplateResponse("login.html", {
+        "request": request,
+        "msg": msg
+    })
 
 
 @application.get("/admin")
