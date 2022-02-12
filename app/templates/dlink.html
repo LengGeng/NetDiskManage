@@ -1,0 +1,161 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    直链下载
+{% endblock %}
+
+{% block head %}
+    <style>
+        .bs-callout {
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            border-left-width: 5px;
+            border-radius: 3px;
+        }
+
+        .bs-callout h4 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .bs-callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bs-callout code {
+            border-radius: 3px;
+        }
+
+        .bs-callout + .bs-callout {
+            margin-top: -5px;
+        }
+
+        .bs-callout-danger {
+            border-left-color: #ce4844;
+        }
+
+        .bs-callout-danger h4 {
+            color: #ce4844;
+        }
+
+        .bs-callout-warning {
+            border-left-color: #aa6708;
+        }
+
+        .bs-callout-warning h4 {
+            color: #aa6708;
+        }
+
+        .bs-callout-info {
+            border-left-color: #1b809e;
+        }
+
+        .bs-callout-info h4 {
+            color: #1b809e;
+        }
+
+    </style>
+
+    <script src="{{ url_for("static",path="clipboard.min.js") }}"></script>
+{% endblock %}
+
+{% block header %}
+    {% include "components/nav.html" %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div>
+            <h1>直链下载</h1>
+            <p>用于直接下载文件。</p>
+            <p>官方要求请求中需要将User-Agent设置为pan.baidu.com。</p>
+            <p>由于直链可能会存在多次重定向且最终由http协议连接加载，导致chrome对下载地址的不信任，这时手动点击保存文件即可。</p>
+
+            <h3>User-Agent</h3>
+            {% set ua = request.headers.get("User-Agent") %}
+            {% set ua_check = ua == "pan.baidu.com" %}
+            <div class="alert {{ "alert-success" if ua_check else "alert-warning" }}" role="alert">{{ ua }}</div>
+            {% if ua_check %}
+                <strong class="text-success">当前可以使用浏览器直接下载</strong>
+            {% else %}
+                <strong class="text-warning">提示：若要使用浏览器直接下载需将User-Agent设置为pan.baidu.com</strong>
+            {% endif %}
+
+            <div>
+                <h1>文件信息</h1>
+                <p>文件名称：{{ filename }}</p>
+                <p>文件大小：<span id="filesize"></span></p>
+                <p>创建时间：<span id="create_time"></span>(8小时内有效)</p>
+                <button id="copy_dlink" class="btn btn-success">复制链接</button>
+
+                {% if ua_check %}
+                    <a class="btn btn-success" href="{{ dlink }}">浏览器下载</a>
+                {% endif %}
+            </div>
+
+            <div>
+                <h1>下载方式</h1>
+                <p>只需要在下载请求中设置User-Agent：pan.baidu.com 即可使用直链进行下载，这是一些通用的解决方案，</p>
+                <p>IDM、aria2、Motrix、Pure浏览器(Android)、Alook浏览器(IOS）等
+                </p>
+            </div>
+
+            <div>
+                <h1>浏览器插件</h1>
+                <p>User-Agent Switcher for Chrome 是一款基于 Chrome 浏览器的插件，它的作用是切换用户代理（User-Agent 或 UA）。</p>
+                <p>通过该插件将User-Agent设置为pan.baidu.com，即可在浏览器中直接使用直链下载。</p>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function filesizeFormat(size, pro = 0.9, dec = 2) {
+            let units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+            let pos = 0
+            while (size >= 1024 * pro) {
+                size /= 1024;
+                pos += 1;
+                if (pos >= units.length) break
+            }
+            return size.toFixed(dec) + units[pos]
+        }
+
+        Date.prototype.Format = function (fmt) {
+            let o = {
+                "M+": this.getMonth() + 1, // 月份
+                "d+": this.getDate(), // 日
+                "h+": this.getHours(), // 小时
+                "m+": this.getMinutes(), // 分
+                "s+": this.getSeconds(), // 秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+                "S": this.getMilliseconds() // 毫秒
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (let k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+        // 获取此html元素
+        let clipboard = new ClipboardJS('#copy_dlink', {
+            text: function () {
+                return "{{ dlink }}";
+            }
+        });
+        // 复制成功事件
+        clipboard.on('success', function (e) {
+            alert("复制成功")
+        });
+        // 复制失败事件
+        clipboard.on('error', function (e) {
+            alert("复制失败")
+        });
+
+        document.body.querySelector("#filesize").innerText = filesizeFormat({{ filesize }});
+        document.body.querySelector("#create_time").innerText = new Date().Format("yyyy年MM月dd日 hh:mm:ss");
+    </script>
+{% endblock %}

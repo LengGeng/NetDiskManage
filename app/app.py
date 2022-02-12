@@ -69,6 +69,23 @@ def down(fid: int):
     return response
 
 
+@application.get("/dlink")
+def down_link(request: Request, fid: int):
+    access_token = [account.token.access_token for account in CONFIG.accounts.values()][0]
+    filemetas = get_filemetas(access_token, [fid])
+    file_meta = filemetas.get("list")[0]
+    link = file_meta.get("dlink")
+    dlink = f"{link}&access_token={access_token}"
+    filename = file_meta.get("filename")
+    filesize = file_meta.get("size")
+    return templates.TemplateResponse("dlink.html", {
+        "request": request,
+        "dlink": dlink,
+        "filename": filename,
+        "filesize": filesize,
+    })
+
+
 @application.get("/about")
 def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})

@@ -194,12 +194,14 @@
             <div class="file-list-time-column">
                 <p>${new Date(file_info.server_mtime * 1000).Format("yyyy-MM-dd")}</p>
                 <div class="btn-group btn-group-cm" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default">
-                        <a
-                            href="${file_info.isdir ? "javascript:alert('文件夹暂不支持下载!')" : "/down?fid=" + file_info.fs_id}"
-                            target="${file_info.isdir ? "_self" : "_blank"}">下载
-                        </a>
-                    </button>
+                    <a class="btn btn-default"
+                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/down?fid=" + file_info.fs_id}"
+                       target="${file_info.isdir ? "_self" : "_blank"}">下载
+                    </a>
+                    <a class="btn btn-default"
+                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/dlink?fid=" + file_info.fs_id}"
+                       target="${file_info.isdir ? "_self" : "_blank"}">直链
+                    </a>
                     <button type="button" class="btn btn-default">更多</button>
                 </div>
             </div>
