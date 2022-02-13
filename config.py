@@ -43,6 +43,7 @@ class Account(BaseModel):
     info: AccountInfo
     token: AccountToken
     mapping: PathMapping = PathMapping()
+    activated: bool = False
 
 
 class WebSite(BaseModel):
