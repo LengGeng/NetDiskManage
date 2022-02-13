@@ -79,6 +79,10 @@ def refresh_config():
         fp.write(CONFIG.json(ensure_ascii=False))
 
 
+def getActiveAccounts():
+    return [account for account in CONFIG.accounts.values() if account.activated]
+
+
 def addAccount(token: dict, info: dict):
     # 生成uuid
     _uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(info.get("uk"))))
