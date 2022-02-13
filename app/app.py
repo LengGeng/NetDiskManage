@@ -124,7 +124,7 @@ def admin(request: Request):
     state = random.randint(1, 100)
     request.session["state"] = state
     authorize_url = get_authorize_url(state)
-    users = [account_token.info.dict() for account_token in CONFIG.accounts.values()]
+    users = [[account_token.info.dict(), account_token.mapping.dict()] for account_token in CONFIG.accounts.values()]
     return templates.TemplateResponse("admin/index.html", {
         "request": request,
         "authorize_url": authorize_url,

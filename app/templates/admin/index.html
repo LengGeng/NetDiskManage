@@ -25,6 +25,7 @@
                 <th>网盘昵称</th>
                 <th>用户ID</th>
                 <th>用户类型</th>
+                <th>路径映射</th>
             </tr>
             </thead>
             <tbody>
@@ -38,7 +39,7 @@
         let users = {{ users | safe }};
         console.log(users)
         let tbody = document.body.querySelector("table tbody");
-        users.forEach((user, i) => {
+        users.forEach(([user, mapping], i) => {
             tbody.innerHTML += `
         <tr>
             <td>${i + 1}</td>
@@ -49,6 +50,7 @@
             <td>${user["netdisk_name"]}</td>
             <td>${user["uk"]}</td>
             <td>${user["vip_type"]}</td>
+            <td>${mapping["original"]} => ${mapping["mapping"]}</td>
         </tr>
         `;
         })
