@@ -25,6 +25,7 @@
                 <th>网盘昵称</th>
                 <th>用户ID</th>
                 <th>用户类型</th>
+                <th>是否激活</th>
                 <th>路径映射</th>
             </tr>
             </thead>
@@ -36,10 +37,10 @@
 
 {% block script %}
     <script>
-        let users = {{ users | safe }};
+        let users = {{ users | tojson }};
         console.log(users)
         let tbody = document.body.querySelector("table tbody");
-        users.forEach(([user, mapping], i) => {
+        users.forEach(([user, mapping, activated], i) => {
             tbody.innerHTML += `
         <tr>
             <td>${i + 1}</td>
@@ -51,6 +52,7 @@
             <td>${user["uk"]}</td>
             <td>${user["vip_type"]}</td>
             <td>${mapping["original"]} => ${mapping["mapping"]}</td>
+            <td>${activated ? "是" : "否"}</td>
         </tr>
         `;
         })
