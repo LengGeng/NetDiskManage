@@ -33,9 +33,15 @@ class AccountToken(BaseModel):
     refresh_token: str
 
 
+class PathMapping(BaseModel):
+    original: str = "/"
+    mapping: str = "/"
+
+
 class Account(BaseModel):
     info: AccountInfo
     token: AccountToken
+    mapping: PathMapping = PathMapping()
 
 
 class WebSite(BaseModel):
