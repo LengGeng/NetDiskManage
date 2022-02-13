@@ -1,3 +1,4 @@
+import uuid
 from typing import List, Dict
 
 from pydantic import BaseModel
@@ -75,6 +76,23 @@ default_config = """
 def refresh_config():
     with open(CONFIG_PATH, 'w', encoding="utf-8") as fp:
         fp.write(CONFIG.json(ensure_ascii=False))
+
+
+def addAccount(token: dict, info: dict):
+    # 生成uuid
+    _uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(info.get("uk"))))
+    info["uuid"] = _uuid
+    # 存储账户信息
+    account = Account(info=info, token=token)
+    # 判断授权账户是否存在
+    if _uuid in CONFIG.accounts:
+        # 保留原有路径映射
+        account.mapping = CONFIG.accounts.get(_uuid).mapping
+    # 添加
+    CONFIG.accounts[_uuid] = account
+    # 刷新配置文件
+    refresh_config()
+    return account
 
 
 def updatePathMapping(uuid_, path_mapping: PathMapping):
