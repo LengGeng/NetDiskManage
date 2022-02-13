@@ -77,6 +77,29 @@ def refresh_config():
         fp.write(CONFIG.json(ensure_ascii=False))
 
 
+def updatePathMapping(uuid_, path_mapping: PathMapping):
+    # 获取账户
+    account = CONFIG.accounts.get(uuid_)
+    # 判断账户是否存在
+    if account:
+        # 获取所有映射路径
+        paths = [item.mapping.mapping for item in CONFIG.accounts.values()]
+        if len(paths) > 1:  # 当为1时，为修改本身，可直接进行修改
+            # 当存在多个账户时，不允许映射为根路径。因为可能会出现重复。
+            if "/" in paths:
+                return {"code": 1, "msg": "存在一个映射为根路径(/)的授权账户，不允许进行多账户映射!"}
+            # 映射路由不允许重复
+            if path_mapping.mapping in paths:
+                return {"code": 2, "msg": "存在一个相同映射的账户!"}
+        # 添加映射
+        account.mapping = path_mapping
+        # 刷新配置文件
+        refresh_config()
+        return {"code": 0, "msg": "success"}
+    else:
+        return {"code": -1, "msg": "授权账户不存在!"}
+
+
 try:
     CONFIG: Config = Config.parse_file(CONFIG_PATH)
 except FileNotFoundError:
