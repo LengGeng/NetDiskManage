@@ -105,8 +105,10 @@ def updatePathMapping(uuid_, path_mapping: PathMapping):
     account = CONFIG.accounts.get(uuid_)
     # 判断账户是否存在
     if account:
-        # 获取所有映射路径
-        paths = [item.mapping.mapping for item in CONFIG.accounts.values()]
+        # 获取所有激活的账户
+        active_accounts = getActiveAccounts()
+        # 获取映射路径
+        paths = [item.mapping.mapping for item in active_accounts]
         if len(paths) > 1:  # 当为1时，为修改本身，可直接进行修改
             # 当存在多个账户时，不允许映射为根路径。因为可能会出现重复。
             if "/" in paths:
@@ -116,6 +118,8 @@ def updatePathMapping(uuid_, path_mapping: PathMapping):
                 return {"code": 2, "msg": "存在一个相同映射的账户!"}
         # 添加映射
         account.mapping = path_mapping
+        # 激活账户
+        account.activated = True
         # 刷新配置文件
         refresh_config()
         return {"code": 0, "msg": "success"}
