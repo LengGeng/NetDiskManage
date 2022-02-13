@@ -18,6 +18,7 @@ class Authorizer(BaseModel):
 
 
 class AccountInfo(BaseModel):
+    uuid: str  # 本应用中的用户ID
     uk: int  # 用户ID
     baidu_name: str  # 百度账号
     netdisk_name: str  # 网盘账号

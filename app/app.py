@@ -25,17 +25,17 @@ def authorize(request: Request, code: str, state: int):
     account_token = get_token(code)
     # 获取账户信息
     account_info = get_user_info(account_token.get("access_token"))
+    # 生成uuid
+    account_info["uuid"] = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(account_info.get("uk"))))
     # 存储账户信息
     account = Account(info=account_info, token=account_token)
-    account_id = uuid.uuid5(uuid.NAMESPACE_DNS, str(account.info.uk))
-    CONFIG.accounts[str(account_id)] = account
+    CONFIG.accounts[account.info.uuid] = account
     refresh_config()
     return templates.TemplateResponse("authorize.html", {
         "request": request,
         "info": account_info,
         "token": account_token,
-    }
-                                      )
+    })
 
 
 @application.get("/down")
