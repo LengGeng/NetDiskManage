@@ -1,0 +1,58 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    路径映射
+{% endblock %}
+
+{% block head %}
+    <style>
+        .absolute-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        form button[type="submit"] {
+            padding-left: 36px;
+            padding-right: 36px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="absolute-center col-lg-4 col-md-6 col-sm-6 col-xs-12">
+            <h2 class="text-center title">路径映射</h2>
+            {% if msg %}
+                <div class="alert alert-warning" role="alert">{{ msg }}</div>
+            {% endif %}
+            <form class="form-horizontal" method="post"
+                  action="{{ url_for("updateMapping") }}?uuid_={{ info.get("uuid") }}">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="uuid">UUID</label>
+                        <input id="uuid" class="form-control" type="text"
+                               value="{{ info.get("uuid") }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">账户名称</label>
+                        <input id="name" class="form-control" type="text"
+                               value="{{ info.get("netdisk_name") or "" }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="original">网盘路径</label>
+                        <input id="original" name="original" class="form-control" type="text" placeholder="网盘路径"
+                               value="{{ mapping.get("original") }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="mapping">映射路径</label>
+                        <input id="mapping" name="mapping" class="form-control" type="text" placeholder="映射路径"
+                               value="{{ mapping.get("mapping") }}">
+                    </div>
+                    <button type="submit" class="btn btn-default center-block">确定</button>
+                </form>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -27,6 +27,7 @@
                 <th>用户类型</th>
                 <th>是否激活</th>
                 <th>路径映射</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -53,6 +54,13 @@
             <td>${user["vip_type"]}</td>
             <td>${mapping["original"]} => ${mapping["mapping"]}</td>
             <td>${activated ? "是" : "否"}</td>
+            <td>
+                <div class="btn-group btn-group-cm" role="group" aria-label="...">
+                    <a class="btn btn-default"
+                        href="{{ url_for("updateMapping") }}?uuid_=${user["uuid"]}">路径映射
+                    </a>
+                </div>
+            </td>
         </tr>
         `;
         })

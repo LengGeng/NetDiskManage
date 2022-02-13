@@ -7,7 +7,7 @@ from starlette.responses import StreamingResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
-from config import CONFIG, addAccount
+from config import CONFIG, addAccount, PathMapping, updatePathMapping
 
 application = APIRouter()
 
@@ -29,6 +29,29 @@ def authorize(request: Request, code: str, state: int):
         "request": request,
         "info": account_info,
         "token": account_token,
+    })
+
+
+@application.api_route("/updateMapping", methods=["GET", "POST"])
+def updateMapping(request: Request, uuid_: str, original: str = Form(""), mapping: str = Form("")):
+    msg = ""
+    # 判断请求方式
+    if request.method == "POST":
+        # 判断参数
+        if original and mapping:
+            path_mapping = PathMapping(original=original, mapping=mapping)
+            result = updatePathMapping(uuid_, path_mapping)
+            # 判断结果
+            msg = result.get("msg", "未知错误")
+        else:
+            msg = "路径映射不能为空!!!"
+    # 账户数据
+    account = CONFIG.accounts[uuid_]
+    return templates.TemplateResponse("mapping.html", {
+        "request": request,
+        "msg": msg,
+        "info": account.info.dict(),
+        "mapping": account.mapping.dict(),
     })
 
 
