@@ -116,6 +116,8 @@ def updatePathMapping(uuid_, path_mapping: PathMapping):
             # 映射路由不允许重复
             if path_mapping.mapping in paths:
                 return {"code": 2, "msg": "存在一个相同映射的账户!"}
+            if path_mapping.mapping == "/":
+                return {"code": 3, "msg": "使用多账户时，不允许映射为根路径(/)!"}
         # 添加映射
         account.mapping = path_mapping
         # 激活账户
