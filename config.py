@@ -1,6 +1,6 @@
 import uuid
 import os.path
-from typing import List, Dict
+from typing import List, Dict, Tuple, Optional
 
 from pydantic import BaseModel
 
@@ -128,6 +128,45 @@ def updatePathMapping(uuid_, path_mapping: PathMapping):
         return {"code": 0, "msg": "success"}
     else:
         return {"code": -1, "msg": "授权账户不存在!"}
+
+
+def getPathMappingOriginal(path: str) -> Tuple[Optional[Account], Optional[str]]:
+    """
+    获取请求路径对应的授权账户以及真实路径
+    :param path: 请求路径
+    :return: (授权账户, 真实路径)
+    """
+    accounts = getActiveAccounts()
+    if accounts:
+        # 可能存在一个账户将目录映射为根目录的
+        if accounts[0].mapping.mapping == "/":
+            # 真实路径 = 源路径 + 现有路径
+            original = accounts[0].mapping.original
+            child_path = path.strip("/")
+            real_path = os.path.normpath(os.path.join(original, child_path)).replace("\\", "/")
+            return accounts[0], real_path
+        else:
+            # 判断是否是根目录,根目录应返回虚拟目录
+            if path == "/":
+                return None, "/"
+            else:
+                # 分割路径
+                path_split = path.strip("/").split("/")
+                virtual_path = "/" + path_split[0]
+                child_path = "/".join(path_split[1:]) if len(path_split) > 1 else ""
+                # 获取映射的原路径
+                for account in accounts:
+                    if virtual_path == account.mapping.mapping:
+                        original = account.mapping.original
+                        # 拼接最终路径
+                        real_path = os.path.normpath(os.path.join(original, child_path)).replace("\\", "/")
+                        return account, real_path
+                else:
+                    # 没有检索到对应的原路径 404
+                    return None, ""
+    else:
+        # 没有授权账户
+        return None, None
 
 
 try:
