@@ -172,8 +172,7 @@ def admin(request: Request):
 @application.get("/{filepath:path}")
 def index(request: Request, filepath: Optional[str] = None):
     filepath = "/" + filepath
-    access_token = [account.token.access_token for account in CONFIG.accounts.values()][0]
-    file_list = get_file_list(access_token, path=filepath)
+    file_list = getTree(filepath)
     return templates.TemplateResponse("index.html", {
         "request": request,
         "title": CONFIG.site.title,
