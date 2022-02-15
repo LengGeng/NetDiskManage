@@ -1,4 +1,5 @@
 import uuid
+import os.path
 from typing import List, Dict
 
 from pydantic import BaseModel
@@ -130,7 +131,7 @@ def updatePathMapping(uuid_, path_mapping: PathMapping):
 
 
 try:
-    CONFIG: Config = Config.parse_file(CONFIG_PATH)
+    CONFIG: Config = Config.parse_file(os.path.join(os.path.dirname(__file__), CONFIG_PATH))
 except FileNotFoundError:
     print("create default config.")
     CONFIG: Config = Config.parse_raw(default_config)
