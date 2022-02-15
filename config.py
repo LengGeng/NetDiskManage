@@ -1,3 +1,4 @@
+import time
 import uuid
 import os.path
 from typing import List, Dict, Tuple, Optional
@@ -167,6 +168,17 @@ def getPathMappingOriginal(path: str) -> Tuple[Optional[Account], Optional[str]]
     else:
         # 没有授权账户
         return None, None
+
+
+def getVirtualFolder() -> dict:
+    accounts = getActiveAccounts()
+    for account in accounts:
+        yield {
+            "isdir": True,
+            "path": account.mapping.mapping,
+            "server_filename": account.mapping.mapping.strip("/"),
+            "server_mtime": time.time(),
+        }
 
 
 try:
