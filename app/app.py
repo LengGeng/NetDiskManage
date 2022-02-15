@@ -1,5 +1,5 @@
 import random
-from typing import Optional
+from typing import Optional, List
 
 import requests
 from fastapi import APIRouter, Request, Form
@@ -7,11 +7,27 @@ from starlette.responses import StreamingResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
-from config import CONFIG, addAccount, PathMapping, updatePathMapping
+from config import CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder
 
 application = APIRouter()
 
 templates = Jinja2Templates(directory="./app/templates")
+
+
+def getTree(path: str) -> List[dict]:
+    account, real_path = getPathMappingOriginal(path)
+    if account and real_path:
+        return get_file_list(account.token.access_token, real_path).get("list")
+    else:
+        # 判断真实路径是否存在
+        if real_path:
+            return list(getVirtualFolder())
+        else:
+            # 没有授权账户
+            if real_path is None:
+                return []
+            else:  # 错误的路径
+                return []
 
 
 # 2.2 接受授权参数
