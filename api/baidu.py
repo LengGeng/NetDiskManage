@@ -20,7 +20,9 @@ def get_authorize_url(state: int) -> str:
         'redirect_uri': redirect_uri,
         'scope': 'basic,netdisk',
         'display': 'popup',
-        'state': state
+        'state': state,
+        'qrcode': 1,
+        'force_login': 1,
     }
     query_string = urllib.parse.urlencode(params)
     return url + query_string
