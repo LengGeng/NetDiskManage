@@ -6,7 +6,7 @@ from fastapi import APIRouter, Request, Form
 from starlette.responses import StreamingResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
-from api.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
+from sdk.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
 from config import CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder
 
 application = APIRouter()

@@ -43,7 +43,6 @@ app.add_middleware(
 # 开启 Session
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
-# app.include_router(baidu, prefix="/api/baidu", tags=["百度网盘"])
 app.include_router(application, tags=["主程序"])
 
 if __name__ == '__main__':
