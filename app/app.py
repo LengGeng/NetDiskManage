@@ -30,6 +30,25 @@ def getTree(path: str) -> List[dict]:
                 return []
 
 
+def getJumpFinalUrl(url: str, maxJump: int = 5) -> str:
+    """
+    获取一个URL最终重定向的URL
+    :param url: 原来的URL
+    :param maxJump: 最大重定向次数,最大为5
+    :return: 最终重定向的URL
+    """
+    jump = 0
+    maxJump = min(maxJump, 5)  # 最大重定向的值为5
+    while jump < maxJump:
+        response = requests.head(url)
+        if response.status_code == 302:
+            url = response.headers['Location']
+            jump += 1
+        else:
+            return url
+    raise Exception("超出最大重定向次数!")
+
+
 # 2.2 接受授权参数
 @application.get("/authorize")
 def authorize(request: Request, code: str, state: int):
@@ -109,6 +128,7 @@ def down_link(request: Request, fid: int):
     file_meta = filemetas.get("list")[0]
     link = file_meta.get("dlink")
     dlink = f"{link}&access_token={access_token}"
+    dlink = getJumpFinalUrl(dlink)
     filename = file_meta.get("filename")
     filesize = file_meta.get("size")
     return templates.TemplateResponse("dlink.html", {
