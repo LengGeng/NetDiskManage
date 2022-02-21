@@ -190,7 +190,7 @@
             <div class="file-list-name-column">
                 <div class="pointer-events-all cursor-p" draggable="true">
                     <span class="file-list-name-icon ${file_info.isdir ? "type-dir" : "type-file"}"></span>
-                    <a href="${file_info.path}" title="Game" class="title" ${file_info.isdir ? "" : 'style="pointer-events: none;"'}>${file_info.server_filename}</a>
+                    <a href="{{ "" if path=="/" else path }}/${file_info.server_filename}" title="Game" class="title" ${file_info.isdir ? "" : 'style="pointer-events: none;"'}>${file_info.server_filename}</a>
                 </div>
             </div>
         </td>
