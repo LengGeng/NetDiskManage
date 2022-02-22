@@ -179,6 +179,7 @@
 
     if (fileListData.length) {
         fileListData.forEach(file_info => {
+            let filepath = `{{ "" if path=="/" else path }}/${file_info.server_filename}`;
             file_list_tbody.innerHTML += `
     <tr class="file-list-item">
         <td class="text-center is-select">
@@ -190,7 +191,7 @@
             <div class="file-list-name-column">
                 <div class="pointer-events-all cursor-p" draggable="true">
                     <span class="file-list-name-icon ${file_info.isdir ? "type-dir" : "type-file"}"></span>
-                    <a href="{{ "" if path=="/" else path }}/${file_info.server_filename}" title="Game" class="title" ${file_info.isdir ? "" : 'style="pointer-events: none;"'}>${file_info.server_filename}</a>
+                    <a href="${filepath}" title="Game" class="title" ${file_info.isdir ? "" : 'style="pointer-events: none;"'}>${file_info.server_filename}</a>
                 </div>
             </div>
         </td>
@@ -199,7 +200,7 @@
                 <p>${new Date(file_info.server_mtime * 1000).Format("yyyy-MM-dd")}</p>
                 <div class="btn-group btn-group-cm" role="group" aria-label="...">
                     <a class="btn btn-default"
-                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/down?fid=" + file_info.fs_id}"
+                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/down?fid=" + file_info.fs_id + "&path=" + filepath}"
                        target="${file_info.isdir ? "_self" : "_blank"}">下载
                     </a>
                     <a class="btn btn-default"
