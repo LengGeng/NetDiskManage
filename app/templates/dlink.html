@@ -90,7 +90,7 @@
                 <button id="copy_dlink" class="btn btn-success">复制链接</button>
 
                 {% if ua_check %}
-                    <a class="btn btn-success" href="{{ dlink | safe }}">浏览器下载</a>
+                    <a class="btn btn-success" href="{{ dlink | safe }}" rel="noreferrer">浏览器下载</a>
                 {% endif %}
             </div>
 
