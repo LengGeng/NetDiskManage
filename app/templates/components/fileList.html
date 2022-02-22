@@ -204,7 +204,7 @@
                        target="${file_info.isdir ? "_self" : "_blank"}">下载
                     </a>
                     <a class="btn btn-default"
-                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/dlink?fid=" + file_info.fs_id}"
+                       href="${file_info.isdir ? " javascript:alert('文件夹暂不支持下载!')" : "/dlink?fid=" + file_info.fs_id + "&path=" + filepath}"
                        target="${file_info.isdir ? "_self" : "_blank"}">直链
                     </a>
                     <button type="button" class="btn btn-default">更多</button>

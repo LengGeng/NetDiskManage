@@ -126,8 +126,12 @@ def down(fid: int, path: str):
 
 
 @application.get("/dlink")
-def down_link(request: Request, fid: int):
-    access_token = [account.token.access_token for account in CONFIG.accounts.values()][0]
+def down_link(request: Request, fid: int, path: str):
+    # 根据文件路径判断所属账户
+    account, real_path = getPathMappingOriginal(path)
+    if not account:
+        return "无效的账户文件!"
+    access_token = account.token.access_token
     filemetas = get_filemetas(access_token, [fid])
     file_meta = filemetas.get("list")[0]
     link = file_meta.get("dlink")
