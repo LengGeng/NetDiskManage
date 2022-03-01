@@ -3,6 +3,7 @@ import time
 import uvicorn
 from fastapi import FastAPI, Request
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -42,6 +43,19 @@ app.add_middleware(
 )
 # 开启 Session
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+
+
+@app.middleware("http")
+async def login_check(request: Request, call_next):
+    response = await call_next(request)
+    # 判断路径
+    if request.url.path.startswith("/admin"):
+        # 判断是否登录
+        if not request.session.get("login"):
+            print("管理员账户未登录!")
+            return RedirectResponse(application.url_path_for("login"))
+    return response
+
 
 app.include_router(application, tags=["主程序"])
 
