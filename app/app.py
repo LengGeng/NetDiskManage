@@ -180,6 +180,14 @@ def login(request: Request, username: str = Form(""), password: str = Form("")):
     })
 
 
+@application.get("/logout")
+def logout(request: Request):
+    # 清空 session
+    request.session.clear()
+    # 跳转至首页
+    return RedirectResponse("/")
+
+
 @application.get("/admin")
 def admin(request: Request):
     state = random.randint(1, 100)

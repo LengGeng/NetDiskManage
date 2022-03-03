@@ -23,6 +23,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if request.session.get("login") %}
                     <li><a href="{{ url_for("admin") }}">后台</a></li>
+                    <li><a href="{{ url_for("logout") }}">注销</a></li>
                 {% else %}
                     <li><a href="{{ url_for("login") }}">登录</a></li>
                 {% endif %}
