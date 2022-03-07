@@ -216,6 +216,7 @@ def settings(request: Request):
         "site": CONFIG.site.dict(),
         "system": CONFIG.system.dict(),
         "administrator": CONFIG.user.dict(),
+        "authorize": CONFIG.authorizers[0].dict(),
     }
     return templates.TemplateResponse("admin/settings.html", {
         "request": request,
@@ -250,6 +251,16 @@ def settings_administrator(request: Request, username: str = Form(...), password
     # 重新计数
     CONFIG.user.count = 0
     return "更新管理员账户信息成功!"
+
+
+@application.post("/admin/settings/authorize")
+def settings_authorize(request: Request, app_id: str = Form(...), app_key: str = Form(...),
+                       secret_key: str = Form(...), sign_key: str = Form(...), ):
+    CONFIG.authorizers[0].AppID = app_id
+    CONFIG.authorizers[0].AppKey = app_key
+    CONFIG.authorizers[0].SecretKey = secret_key
+    CONFIG.authorizers[0].SignKey = sign_key
+    return "更新授权账户信息成功!"
 
 
 # 放在左后
