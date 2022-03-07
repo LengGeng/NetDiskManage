@@ -204,6 +204,14 @@ def admin(request: Request):
     })
 
 
+@application.get("/admin/settings")
+def settings(request: Request):
+    return templates.TemplateResponse("admin/settings.html", {
+        "request": request,
+        # "msg": msg
+    })
+
+
 # 放在左后
 @application.get("/{filepath:path}")
 def index(request: Request, filepath: Optional[str] = None):

@@ -1,0 +1,232 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    修改设置
+{% endblock %}
+
+{% block head %}
+    <style>
+        td {
+            word-break: break-all !important;
+        }
+
+        ul.nav.nav-tabs {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+    {% include "components/nav.html" %}
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#site" data-toggle="tab">网站配置</a></li>
+        <li role="presentation"><a href="#system" data-toggle="tab">系统配置</a></li>
+        <li role="presentation"><a href="#administrator" data-toggle="tab">管理员账户配置</a></li>
+        <li role="presentation"><a href="#authorize" data-toggle="tab">授权账户配置</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- 网站设置 -->
+        <div id="site" class="tab-pane fade in active">
+            <form method="post">
+                <div class="bs-example" data-example-id="contextual-table">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="text-danger">请谨慎修改设置</h4>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn btn-default" type="submit">保存设置</button>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>属性名</th>
+                            <th>旧数据</th>
+                            <th>新数据</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 网站设置 -->
+                        <tr>
+                            <td>网站名称</td>
+                            <td></td>
+                            <td>
+                                <input name="title" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>网站副标题</td>
+                            <td></td>
+                            <td>
+                                <input name="subtitle" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>网站介绍</td>
+                            <td></td>
+                            <td>
+                                <input name="desc" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- 系统设置 -->
+        <div id="system" class="tab-pane fade">
+            <form method="post">
+                <div class="bs-example" data-example-id="contextual-table">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="text-danger">请谨慎修改设置</h4>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn btn-default" type="submit">保存设置</button>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>属性名</th>
+                            <th>旧数据</th>
+                            <th>新数据</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 系统设置 -->
+                        <tr>
+                            <td>开启下载</td>
+                            <td></td>
+                            <td>
+                                <input name="open_download" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>开启直链</td>
+                            <td></td>
+                            <td>
+                                <input name="open_dlink" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>开启授权</td>
+                            <td></td>
+                            <td>
+                                <input name="open_grant" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- 管理员账户设置 -->
+        <div id="administrator" class="tab-pane fade">
+            <form method="post">
+                <div class="bs-example" data-example-id="contextual-table">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="text-danger">请谨慎修改设置</h4>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn btn-default" type="submit">保存设置</button>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>属性名</th>
+                            <th>旧数据</th>
+                            <th>新数据</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 管理员设置 -->
+                        <tr>
+                            <td>管理员账户</td>
+                            <td></td>
+                            <td>
+                                <input name="username" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>管理员密码</td>
+                            <td></td>
+                            <td>
+                                <input name="password" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>登录锁定</td>
+                            <td></td>
+                            <td>
+                                <input name="login_lock" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- 授权设置 -->
+        <div id="authorize" class="tab-pane fade">
+            <form method="post">
+                <div class="bs-example" data-example-id="contextual-table">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4 class="text-danger">请谨慎修改设置</h4>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn btn-default" type="submit">保存设置</button>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>属性名</th>
+                            <th>旧数据</th>
+                            <th>新数据</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 授权账户设置 -->
+                        <tr>
+                            <td>AppID</td>
+                            <td></td>
+                            <td>
+                                <input name="app_id" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AppKey</td>
+                            <td></td>
+                            <td>
+                                <input name="app_key" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SecretKey</td>
+                            <td></td>
+                            <td>
+                                <input name="secret_key" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SignKey</td>
+                            <td></td>
+                            <td>
+                                <input name="sign_key" value="" class="form-control"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

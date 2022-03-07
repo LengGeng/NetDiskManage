@@ -18,6 +18,9 @@
                 <li class="active"><a href="#">首页<i class="fa fa-home"></i></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-left">
+                {% if request.session.get("login") %}
+                    <li><a href="{{ url_for("settings") }}">修改配置</a></li>
+                {% endif %}
                 <li><a href="#">API介绍</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
