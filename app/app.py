@@ -7,7 +7,9 @@ from starlette.responses import StreamingResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from sdk.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
-from config import CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder
+from config import (
+    CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder, refresh_config
+)
 
 application = APIRouter()
 
@@ -241,6 +243,7 @@ def settings_site(request: Request, title: str = Form(""), subtitle: str = Form(
     CONFIG.site.title = title or CONFIG.site.title
     CONFIG.site.subtitle = subtitle or CONFIG.site.subtitle
     CONFIG.site.desc = desc or CONFIG.site.desc
+    refresh_config()
     return jump(request, "提示", "更新网站信息成功!", application.url_path_for("settings"))
 
 
@@ -250,6 +253,7 @@ def settings_system(request: Request, open_download: bool = Form(True), open_dli
     CONFIG.system.open_download = open_download
     CONFIG.system.open_dlink = open_dlink
     CONFIG.system.open_grant = open_grant
+    refresh_config()
     return jump(request, "提示", "更新系统设置成功!(但该配置项暂未启用👀)", application.url_path_for("settings"))
 
 
@@ -261,6 +265,7 @@ def settings_administrator(request: Request, username: str = Form(...), password
     CONFIG.user.lock = lock
     # 重新计数
     CONFIG.user.count = 0
+    refresh_config()
     return jump(request, "提示", "更新管理员账户信息成功!", application.url_path_for("settings"))
 
 
@@ -271,6 +276,7 @@ def settings_authorize(request: Request, app_id: str = Form(...), app_key: str =
     CONFIG.authorizers[0].AppKey = app_key
     CONFIG.authorizers[0].SecretKey = secret_key
     CONFIG.authorizers[0].SignKey = sign_key
+    refresh_config()
     return jump(request, "提示", "更新授权账户信息成功!", application.url_path_for("settings"))
 
 
