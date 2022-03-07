@@ -241,7 +241,7 @@ def settings_site(request: Request, title: str = Form(""), subtitle: str = Form(
     CONFIG.site.title = title or CONFIG.site.title
     CONFIG.site.subtitle = subtitle or CONFIG.site.subtitle
     CONFIG.site.desc = desc or CONFIG.site.desc
-    return "更新网站信息成功!"
+    return jump(request, "提示", "更新网站信息成功!", application.url_path_for("settings"))
 
 
 @application.post("/admin/settings/system")
@@ -250,7 +250,7 @@ def settings_system(request: Request, open_download: bool = Form(True), open_dli
     CONFIG.system.open_download = open_download
     CONFIG.system.open_dlink = open_dlink
     CONFIG.system.open_grant = open_grant
-    return "更新系统设置成功!(但该配置项暂未启用👀)"
+    return jump(request, "提示", "更新系统设置成功!(但该配置项暂未启用👀)", application.url_path_for("settings"))
 
 
 @application.post("/admin/settings/administrator")
@@ -261,7 +261,7 @@ def settings_administrator(request: Request, username: str = Form(...), password
     CONFIG.user.lock = lock
     # 重新计数
     CONFIG.user.count = 0
-    return "更新管理员账户信息成功!"
+    return jump(request, "提示", "更新管理员账户信息成功!", application.url_path_for("settings"))
 
 
 @application.post("/admin/settings/authorize")
@@ -271,7 +271,7 @@ def settings_authorize(request: Request, app_id: str = Form(...), app_key: str =
     CONFIG.authorizers[0].AppKey = app_key
     CONFIG.authorizers[0].SecretKey = secret_key
     CONFIG.authorizers[0].SignKey = sign_key
-    return "更新授权账户信息成功!"
+    return jump(request, "提示", "更新授权账户信息成功!", application.url_path_for("settings"))
 
 
 # 放在左后
