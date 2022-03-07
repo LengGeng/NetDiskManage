@@ -8,10 +8,16 @@
     <style>
         td {
             word-break: break-all !important;
+            vertical-align: middle !important;
         }
 
         ul.nav.nav-tabs {
             margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
         }
     </style>
 {% endblock %}
@@ -30,8 +36,9 @@
 
     <div class="tab-content">
         <!-- 网站设置 -->
+        {% set site = settings.get("site") %}
         <div id="site" class="tab-pane fade in active">
-            <form method="post">
+            <form method="post" action="{{ url_for("settings_site") }}">
                 <div class="bs-example" data-example-id="contextual-table">
                     <div class="row">
                         <div class="col-xs-6">
@@ -42,6 +49,11 @@
                         </div>
                     </div>
                     <table class="table table-bordered table-striped">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="45%">
+                            <col width="45%">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th>属性名</th>
@@ -53,23 +65,23 @@
                         <!-- 网站设置 -->
                         <tr>
                             <td>网站名称</td>
-                            <td></td>
+                            <td>{{ site.get("title") }}</td>
                             <td>
-                                <input name="title" value="" class="form-control"/>
+                                <input name="title" value="{{ site.get("title") }}" class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>网站副标题</td>
-                            <td></td>
+                            <td>{{ site.get("subtitle") }}</td>
                             <td>
-                                <input name="subtitle" value="" class="form-control"/>
+                                <input name="subtitle" value="{{ site.get("subtitle") }}" class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>网站介绍</td>
-                            <td></td>
+                            <td>{{ site.get("desc") }}</td>
                             <td>
-                                <input name="desc" value="" class="form-control"/>
+                                <textarea name="desc" rows="2" class="form-control">{{ site.get("desc") }}</textarea>
                             </td>
                         </tr>
                         </tbody>

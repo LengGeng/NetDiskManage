@@ -206,10 +206,22 @@ def admin(request: Request):
 
 @application.get("/admin/settings")
 def settings(request: Request):
+    settingData = {
+        "site": CONFIG.site.dict(),
+    }
     return templates.TemplateResponse("admin/settings.html", {
         "request": request,
+        "settings": settingData,
         # "msg": msg
     })
+
+
+@application.post("/admin/settings/site")
+def settings_site(request: Request, title: str = Form(""), subtitle: str = Form(""), desc: str = Form("")):
+    CONFIG.site.title = title or CONFIG.site.title
+    CONFIG.site.subtitle = subtitle or CONFIG.site.subtitle
+    CONFIG.site.desc = desc or CONFIG.site.desc
+    return "更新网站信息成功!"
 
 
 # 放在左后
