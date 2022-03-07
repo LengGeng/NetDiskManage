@@ -208,6 +208,7 @@ def admin(request: Request):
 def settings(request: Request):
     settingData = {
         "site": CONFIG.site.dict(),
+        "system": CONFIG.system.dict(),
     }
     return templates.TemplateResponse("admin/settings.html", {
         "request": request,
@@ -222,6 +223,15 @@ def settings_site(request: Request, title: str = Form(""), subtitle: str = Form(
     CONFIG.site.subtitle = subtitle or CONFIG.site.subtitle
     CONFIG.site.desc = desc or CONFIG.site.desc
     return "更新网站信息成功!"
+
+
+@application.post("/admin/settings/system")
+def settings_system(request: Request, open_download: bool = Form(True), open_dlink: bool = Form(True),
+                    open_grant: bool = Form(True)):
+    CONFIG.system.open_download = open_download
+    CONFIG.system.open_dlink = open_dlink
+    CONFIG.system.open_grant = open_grant
+    return "更新系统设置成功!(但该配置项暂未启用👀)"
 
 
 # 放在左后

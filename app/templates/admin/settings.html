@@ -90,8 +90,9 @@
             </form>
         </div>
         <!-- 系统设置 -->
+        {% set system = settings.get("system") %}
         <div id="system" class="tab-pane fade">
-            <form method="post">
+            <form method="post" action="{{ url_for("settings_system") }}">
                 <div class="bs-example" data-example-id="contextual-table">
                     <div class="row">
                         <div class="col-xs-6">
@@ -102,6 +103,11 @@
                         </div>
                     </div>
                     <table class="table table-bordered table-striped">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="45%">
+                            <col width="45%">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th>属性名</th>
@@ -113,23 +119,62 @@
                         <!-- 系统设置 -->
                         <tr>
                             <td>开启下载</td>
-                            <td></td>
+                            <td>{{ "开启" if system.get("open_download") else "关闭" }}</td>
                             <td>
-                                <input name="open_download" value="" class="form-control"/>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_download"
+                                               value="true" {{ "checked" if system.get("open_download") else "" }}>
+                                        开启
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_download"
+                                               value="false" {{ "checked" if not system.get("open_download") else "" }}>
+                                        关闭
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td>开启直链</td>
-                            <td></td>
+                            <td>{{ "开启" if system.get("open_dlink") else "关闭" }}</td>
                             <td>
-                                <input name="open_dlink" value="" class="form-control"/>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_dlink"
+                                               value="true" {{ "checked" if system.get("open_dlink") else "" }}>
+                                        开启
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_dlink"
+                                               value="false" {{ "checked" if not system.get("open_dlink") else "" }}>
+                                        关闭
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td>开启授权</td>
-                            <td></td>
+                            <td>{{ "开启" if system.get("open_grant") else "关闭" }}</td>
                             <td>
-                                <input name="open_grant" value="" class="form-control"/>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_grant"
+                                               value="true" {{ "checked" if system.get("open_grant") else "" }}>
+                                        开启
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="open_grant"
+                                               value="false" {{ "checked" if not system.get("open_grant") else "" }}>
+                                        关闭
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
