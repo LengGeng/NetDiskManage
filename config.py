@@ -54,9 +54,16 @@ class WebSite(BaseModel):
     desc: str
 
 
+class SystemConfig(BaseModel):
+    open_download: bool
+    open_dlink: bool
+    open_grant: bool
+
+
 class Config(BaseModel):
     user: User
     site: WebSite
+    system: SystemConfig
     authorizers: List[Authorizer] = []
     accounts: Dict[str, Account] = {}
 
@@ -71,6 +78,11 @@ default_config = """
     "title": "NetDiskManage",
     "subtitle": "网盘管理",
     "desc": "NetDiskManage是一个网盘管理程序,旨在方便用户整合管理多个网盘中的资源进行管理。"
+  },
+  "system": {
+    "open_download": true,
+    "open_dlink": true,
+    "open_grant": true
   }
 }
 """
