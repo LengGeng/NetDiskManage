@@ -183,8 +183,9 @@
             </form>
         </div>
         <!-- 管理员账户设置 -->
+        {% set administrator = settings.get("administrator") %}
         <div id="administrator" class="tab-pane fade">
-            <form method="post">
+            <form method="post" action="{{ url_for("settings_administrator") }}">
                 <div class="bs-example" data-example-id="contextual-table">
                     <div class="row">
                         <div class="col-xs-6">
@@ -195,6 +196,11 @@
                         </div>
                     </div>
                     <table class="table table-bordered table-striped">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="45%">
+                            <col width="45%">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th>属性名</th>
@@ -206,23 +212,38 @@
                         <!-- 管理员设置 -->
                         <tr>
                             <td>管理员账户</td>
-                            <td></td>
+                            <td>{{ administrator.get("username") }}</td>
                             <td>
-                                <input name="username" value="" class="form-control"/>
+                                <input name="username" value="{{ administrator.get("username") }}"
+                                       class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>管理员密码</td>
-                            <td></td>
+                            <td>{{ administrator.get("password") }}</td>
                             <td>
-                                <input name="password" value="" class="form-control"/>
+                                <input name="password" value="{{ administrator.get("password") }}"
+                                       class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>登录锁定</td>
-                            <td></td>
+                            <td>{{ "开启" if administrator.get("lock") else "关闭" }}</td>
                             <td>
-                                <input name="login_lock" value="" class="form-control"/>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="lock"
+                                               value="true" {{ "checked" if administrator.get("lock") else "" }}>
+                                        开启
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="lock"
+                                               value="false" {{ "checked" if not administrator.get("lock") else "" }}>
+                                        关闭
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                         </tbody>

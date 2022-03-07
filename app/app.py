@@ -215,6 +215,7 @@ def settings(request: Request):
     settingData = {
         "site": CONFIG.site.dict(),
         "system": CONFIG.system.dict(),
+        "administrator": CONFIG.user.dict(),
     }
     return templates.TemplateResponse("admin/settings.html", {
         "request": request,
@@ -238,6 +239,17 @@ def settings_system(request: Request, open_download: bool = Form(True), open_dli
     CONFIG.system.open_dlink = open_dlink
     CONFIG.system.open_grant = open_grant
     return "更新系统设置成功!(但该配置项暂未启用👀)"
+
+
+@application.post("/admin/settings/administrator")
+def settings_administrator(request: Request, username: str = Form(...), password: str = Form(...),
+                           lock: bool = Form(True)):
+    CONFIG.user.username = username
+    CONFIG.user.password = password
+    CONFIG.user.lock = lock
+    # 重新计数
+    CONFIG.user.count = 0
+    return "更新管理员账户信息成功!"
 
 
 # 放在左后
