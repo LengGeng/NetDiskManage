@@ -14,6 +14,8 @@ def get_authorize_url(state: int) -> str:
     :return:
     """
     url = "https://openapi.baidu.com/oauth/2.0/authorize?"
+    if not CONFIG.authorizers:
+        return ""
     params = {
         'response_type': 'code',
         'client_id': CONFIG.authorizers[0].AppKey,

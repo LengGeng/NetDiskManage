@@ -281,30 +281,30 @@
                         <!-- 授权账户设置 -->
                         <tr>
                             <td>AppID</td>
-                            <td>{{ authorize.get("AppID") }}</td>
+                            <td>{{ authorize.get("AppID", "") }}</td>
                             <td>
-                                <input name="app_id" value="{{ authorize.get("AppID") }}" class="form-control"/>
+                                <input name="app_id" value="{{ authorize.get("AppID", "") }}" class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>AppKey</td>
-                            <td>{{ authorize.get("AppKey") }}</td>
+                            <td>{{ authorize.get("AppKey", "") }}</td>
                             <td>
-                                <input name="app_key" value="{{ authorize.get("AppKey") }}" class="form-control"/>
+                                <input name="app_key" value="{{ authorize.get("AppKey", "") }}" class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>SecretKey</td>
-                            <td>{{ authorize.get("SecretKey") }}</td>
+                            <td>{{ authorize.get("SecretKey", "") }}</td>
                             <td>
-                                <input name="secret_key" value="{{ authorize.get("SecretKey") }}" class="form-control"/>
+                                <input name="secret_key" value="{{ authorize.get("SecretKey", "") }}" class="form-control"/>
                             </td>
                         </tr>
                         <tr>
                             <td>SignKey</td>
-                            <td>{{ authorize.get("SignKey") }}</td>
+                            <td>{{ authorize.get("SignKey", "") }}</td>
                             <td>
-                                <input name="sign_key" value="{{ authorize.get("SignKey") }}" class="form-control"/>
+                                <input name="sign_key" value="{{ authorize.get("SignKey", "") }}" class="form-control"/>
                             </td>
                         </tr>
                         </tbody>

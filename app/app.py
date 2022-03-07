@@ -8,7 +8,8 @@ from starlette.templating import Jinja2Templates
 
 from sdk.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
 from config import (
-    CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder, refresh_config
+    CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder, refresh_config,
+    Authorizer
 )
 
 application = APIRouter()
@@ -212,6 +213,8 @@ def admin(request: Request):
     state = random.randint(1, 100)
     request.session["state"] = state
     authorize_url = get_authorize_url(state)
+    if not authorize_url:
+        return jump(request, "错误", "还未添加授权账户!", application.url_path_for("settings"), code=1)
     users = [
         [account_token.info.dict(), account_token.mapping.dict(), account_token.activated]
         for account_token in CONFIG.accounts.values()
@@ -225,11 +228,15 @@ def admin(request: Request):
 
 @application.get("/admin/settings")
 def settings(request: Request):
+    if CONFIG.authorizers:
+        authorizer = CONFIG.authorizers[0].dict()
+    else:
+        authorizer = {}
     settingData = {
         "site": CONFIG.site.dict(),
         "system": CONFIG.system.dict(),
         "administrator": CONFIG.user.dict(),
-        "authorize": CONFIG.authorizers[0].dict(),
+        "authorize": authorizer,
     }
     return templates.TemplateResponse("admin/settings.html", {
         "request": request,
@@ -272,10 +279,11 @@ def settings_administrator(request: Request, username: str = Form(...), password
 @application.post("/admin/settings/authorize")
 def settings_authorize(request: Request, app_id: str = Form(...), app_key: str = Form(...),
                        secret_key: str = Form(...), sign_key: str = Form(...), ):
-    CONFIG.authorizers[0].AppID = app_id
-    CONFIG.authorizers[0].AppKey = app_key
-    CONFIG.authorizers[0].SecretKey = secret_key
-    CONFIG.authorizers[0].SignKey = sign_key
+    authorizer = Authorizer(AppID=app_id, AppKey=app_key, SecretKey=secret_key, SignKey=sign_key)
+    if CONFIG.authorizers:
+        CONFIG.authorizers[0] = authorizer
+    else:
+        CONFIG.authorizers.append(authorizer)
     refresh_config()
     return jump(request, "提示", "更新授权账户信息成功!", application.url_path_for("settings"))
 
