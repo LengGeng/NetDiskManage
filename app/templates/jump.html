@@ -1,0 +1,45 @@
+{% extends "components/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block head %}
+    <style>
+        .jump {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+        }
+
+        .jump > div {
+            margin: 0 auto;
+            float: none;
+        }
+
+        .jump .alert {
+            opacity: {{ 1 if msg else 0 }};
+            margin: 30px auto;
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+    {% include("components/nav.html") %}
+{% endblock %}
+
+{% block content %}
+    <div class="jump">
+        <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12">
+            <h2 class="text-center title">{{ title }}</h2>
+            <div class="alert alert-{{ "warning" if code else "success" }}" role="alert">{{ msg }}</div>
+            <div class="text-right">
+                <a class="btn btn-primary btn-lg" href="{{ url }}">确定</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

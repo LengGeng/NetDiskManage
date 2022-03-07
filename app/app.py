@@ -49,6 +49,17 @@ def getJumpFinalUrl(url: str, maxJump: int = 5) -> str:
     raise Exception("超出最大重定向次数!")
 
 
+@application.get("/jump")
+def jump(request: Request, title: str = Form("跳转"), msg: str = Form(""), url: str = Form("/"), code: int = Form(0)):
+    return templates.TemplateResponse("jump.html", {
+        "request": request,
+        "title": title,
+        "msg": msg,
+        "code": code,
+        "url": url,
+    })
+
+
 # 2.2 接受授权参数
 @application.get("/authorize")
 def authorize(request: Request, code: str, state: int):
