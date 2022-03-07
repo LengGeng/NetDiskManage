@@ -11,6 +11,8 @@ from settings import CONFIG_PATH
 class User(BaseModel):
     username: str
     password: str
+    lock: bool = True
+    count: int = 0
 
 
 class Authorizer(BaseModel):

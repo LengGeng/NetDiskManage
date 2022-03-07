@@ -165,12 +165,18 @@ def login(request: Request, username: str = Form(""), password: str = Form("")):
     # 判断请求方式
     if request.method == "POST":
         if username and password:
-            if username == CONFIG.user.username and password == CONFIG.user.password:
-                print("登陆成功!")
-                request.session.setdefault("login", True)
-                return success_redirect_response
+            if CONFIG.user.lock and CONFIG.user.count >= 3:
+                msg = "账户已经锁定!"
             else:
-                msg = "用户名或密码错误!!!"
+                if username == CONFIG.user.username and password == CONFIG.user.password:
+                    print("登陆成功!")
+                    request.session.setdefault("login", True)
+                    # 清空计数
+                    CONFIG.user.count = 0
+                    return success_redirect_response
+                else:
+                    CONFIG.user.count += 1
+                    msg = "用户名或密码错误!!!"
         else:
             msg = "用户名或密码不能为空!!!"
 
