@@ -1,11 +1,13 @@
 import time
 import uuid
 import os.path
+from enum import Enum
 from typing import List, Dict, Tuple, Optional
 
 from pydantic import BaseModel
 
 from settings import CONFIG_PATH
+from utils import KeyScopeDict
 
 
 class User(BaseModel):
@@ -20,6 +22,11 @@ class Authorizer(BaseModel):
     AppKey: str
     SecretKey: str
     SignKey: str
+
+
+class AuthorizerCategory(str, Enum):
+    baidu = "百度网盘"
+    ali = "阿里云盘"
 
 
 class AccountInfo(BaseModel):
@@ -66,7 +73,7 @@ class Config(BaseModel):
     user: User
     site: WebSite
     system: SystemConfig
-    authorizers: List[Authorizer] = []
+    authorizers: Dict[str, Authorizer] = KeyScopeDict(AuthorizerCategory)
     accounts: Dict[str, Account] = {}
 
 
