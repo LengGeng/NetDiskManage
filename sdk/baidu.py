@@ -3,7 +3,7 @@ from typing import List
 
 import requests
 
-from config import CONFIG
+from config import CONFIG, AuthorizerCategory
 from settings import redirect_uri
 
 
@@ -14,11 +14,12 @@ def get_authorize_url(state: int) -> str:
     :return:
     """
     url = "https://openapi.baidu.com/oauth/2.0/authorize?"
-    if not CONFIG.authorizers:
+    baidu_authorizer = CONFIG.authorizers.get(AuthorizerCategory.baidu)
+    if not baidu_authorizer:
         return ""
     params = {
         'response_type': 'code',
-        'client_id': CONFIG.authorizers[0].AppKey,
+        'client_id': baidu_authorizer.AppKey,
         'redirect_uri': redirect_uri,
         'scope': 'basic,netdisk',
         'display': 'popup',
@@ -37,11 +38,14 @@ def get_token(code: str) -> dict:
     :return:
     """
     url = "https://openapi.baidu.com/oauth/2.0/token"
+    baidu_authorizer = CONFIG.authorizers.get(AuthorizerCategory.baidu)
+    if not baidu_authorizer:
+        return {}
     params = {
         "grant_type": "authorization_code",
         "code": code,
-        "client_id": CONFIG.authorizers[0].AppKey,
-        "client_secret": CONFIG.authorizers[0].SecretKey,
+        "client_id": baidu_authorizer.AppKey,
+        "client_secret": baidu_authorizer.SecretKey,
         "redirect_uri": redirect_uri
     }
     response = requests.get(url, params=params)
@@ -55,11 +59,14 @@ def refresh_token(token: str) -> dict:
     :return:
     """
     url = "https://openapi.baidu.com/oauth/2.0/token"
+    baidu_authorizer = CONFIG.authorizers.get(AuthorizerCategory.baidu)
+    if not baidu_authorizer:
+        return {}
     params = {
         "grant_type": "refresh_token",
         "refresh_token": token,
-        "client_id": CONFIG.authorizers[0].AppKey,
-        "client_secret": CONFIG.authorizers[0].SecretKey,
+        "client_id": baidu_authorizer.AppKey,
+        "client_secret": baidu_authorizer.SecretKey,
     }
     response = requests.get(url, params=params)
     return response.json()

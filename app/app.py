@@ -9,7 +9,7 @@ from starlette.templating import Jinja2Templates
 from sdk.baidu import get_authorize_url, get_user_info, get_token, get_file_list, get_filemetas
 from config import (
     CONFIG, addAccount, PathMapping, updatePathMapping, getPathMappingOriginal, getVirtualFolder, refresh_config,
-    Authorizer
+    Authorizer, AuthorizerCategory
 )
 
 application = APIRouter()
@@ -71,6 +71,8 @@ def authorize(request: Request, code: str, state: int):
         return {"error": "invalid state."}
     # 获取 token
     account_token = get_token(code)
+    if not account_token:
+        return jump(request, "错误", "还未添加授权账户!", application.url_path_for("settings"), code=1)
     # 获取账户信息
     account_info = get_user_info(account_token.get("access_token"))
     addAccount(account_token, account_info)
@@ -228,10 +230,7 @@ def admin(request: Request):
 
 @application.get("/admin/settings")
 def settings(request: Request):
-    if CONFIG.authorizers:
-        authorizer = CONFIG.authorizers[0].dict()
-    else:
-        authorizer = {}
+    authorizer = CONFIG.authorizers.get(AuthorizerCategory.baidu, {})
     settingData = {
         "site": CONFIG.site.dict(),
         "system": CONFIG.system.dict(),
@@ -280,10 +279,7 @@ def settings_administrator(request: Request, username: str = Form(...), password
 def settings_authorize(request: Request, app_id: str = Form(...), app_key: str = Form(...),
                        secret_key: str = Form(...), sign_key: str = Form(...), ):
     authorizer = Authorizer(AppID=app_id, AppKey=app_key, SecretKey=secret_key, SignKey=sign_key)
-    if CONFIG.authorizers:
-        CONFIG.authorizers[0] = authorizer
-    else:
-        CONFIG.authorizers.append(authorizer)
+    CONFIG.authorizers[AuthorizerCategory.baidu] = authorizer
     refresh_config()
     return jump(request, "提示", "更新授权账户信息成功!", application.url_path_for("settings"))
 
