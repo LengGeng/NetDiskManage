@@ -1,5 +1,6 @@
 import random
 from typing import Optional, List
+from urllib.parse import quote
 
 import requests
 from fastapi import APIRouter, Request, Form
@@ -128,11 +129,11 @@ def down(fid: int, path: str):
         with requests.get(url, headers=headers, stream=True) as file:
             file.raise_for_status()
             yield from file.iter_content(chunk_size=8192)
-
+    # ref: https://blog.robotshell.org/2012/deal-with-http-header-encoding-for-file-download/
     response_headers = {
         "Content-type": "application/octet-stream",
         "Accept-Ranges": "bytes",
-        "Content-Disposition": f"attachment; filename={filename}",
+        "Content-Disposition": f"attachment; filename*=utf-8''{quote(filename)}",
         "Content-Length": f"{filesize}",
         "Content-Transfer-Encoding": "binary"
     }
